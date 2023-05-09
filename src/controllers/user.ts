@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { User } from '../interfaces/User';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 
-const users: User[] = [];
+let users: User[] = [];
 
 export function getUsers(req: IncomingMessage, res: ServerResponse) {
   res.writeHead(200, {
@@ -80,7 +80,7 @@ export function addUser(req: IncomingMessage, res: ServerResponse) {
         hobbies: parsedData.hobbies,
       };
 
-      users.push(newUser);
+      process.send?.([...users, newUser]);
 
       res.writeHead(201, {
         'Content-Type': 'application/json',
@@ -146,6 +146,8 @@ export function updateUser(req: IncomingMessage, res: ServerResponse) {
     user.age = parsedData.age;
     user.hobbies = parsedData.hobbies;
 
+    process.send?.(users);
+
     res.writeHead(200, {
       'Content-Type': 'application/json',
     });
@@ -192,8 +194,14 @@ export function deleteuser(req: IncomingMessage, res: ServerResponse) {
   const userIndex = users.findIndex((u) => u.id === userId);
   users.splice(userIndex, 1);
 
+  process.send?.(users);
+
   res.writeHead(204, {
     'Content-Type': 'application/json',
   });
   res.end();
 }
+
+process.on('message', (allUsers: User[]) => {
+  users = allUsers;
+});
