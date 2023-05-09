@@ -80,7 +80,11 @@ export function addUser(req: IncomingMessage, res: ServerResponse) {
         hobbies: parsedData.hobbies,
       };
 
-      process.send?.([...users, newUser]);
+      if (process.send) {
+        process.send([...users, newUser]);
+      } else {
+        users.push(newUser);
+      }
 
       res.writeHead(201, {
         'Content-Type': 'application/json',
@@ -146,7 +150,9 @@ export function updateUser(req: IncomingMessage, res: ServerResponse) {
     user.age = parsedData.age;
     user.hobbies = parsedData.hobbies;
 
-    process.send?.(users);
+    if (process.send) {
+      process.send(users);
+    }
 
     res.writeHead(200, {
       'Content-Type': 'application/json',
@@ -194,7 +200,9 @@ export function deleteuser(req: IncomingMessage, res: ServerResponse) {
   const userIndex = users.findIndex((u) => u.id === userId);
   users.splice(userIndex, 1);
 
-  process.send?.(users);
+  if (process.send) {
+    process.send(users);
+  }
 
   res.writeHead(204, {
     'Content-Type': 'application/json',
@@ -202,6 +210,8 @@ export function deleteuser(req: IncomingMessage, res: ServerResponse) {
   res.end();
 }
 
-process.on('message', (allUsers: User[]) => {
-  users = allUsers;
-});
+if (process.send) {
+  process.on('message', (allUsers: User[]) => {
+    users = allUsers;
+  });
+}

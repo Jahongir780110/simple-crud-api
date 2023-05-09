@@ -10,7 +10,8 @@
     "start:multi": "npm run build && node ./build/mainCluster.js",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "prettier": "prettier src/**/*.ts --write"
+    "prettier": "prettier src/**/*.ts --write",
+    "test": "ts-node src/test.ts"
   },
   "type": "module",
   "keywords": [],
