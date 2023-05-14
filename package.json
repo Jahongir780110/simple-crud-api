@@ -9,8 +9,8 @@
     "start:prod": "npm run build && node ./build/index.js",
     "start:multi": "npm run build && node ./build/mainCluster.js",
     "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix",
-    "prettier": "prettier src/**/*.ts --write",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier src/**/*.ts --write",
     "test": "ts-node src/test.ts"
   },
   "type": "module",
